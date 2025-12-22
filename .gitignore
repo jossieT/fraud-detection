@@ -1,0 +1,62 @@
+# Dependency directories
+venv/
+.venv/
+env/
+bin/
+obj/
+
+# Build outputs
+dist/
+build/
+out/
+*.exe
+*.dll
+*.so
+*.dylib
+*.class
+*.pyc
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+desktop.ini
+
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Logs and databases
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.sqlite
+*.db
+
+# Testing and coverage
+coverage/
+.nyc_output/
+.pytest_cache/
+.tox/
+
+# Data
+.data/
+data/
+data
