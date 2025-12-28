@@ -54,6 +54,14 @@ This project aims to build accurate and explainable fraud detection models for A
 2. Run `notebooks/modeling.ipynb` to train models and evaluate performance.
 3. Verification: Run `python tests/verify_modeling.py` to ensure the end-to-end flow works with dummy data.
 
+### 2025 Updates: Verification & Fixes
+
+- **Pipeline Verification**: Validated `verify_pipeline.py` and `verify_modeling.py` successfully.
+- **Bug Fixes**:
+  - Resolved blocking UI issue in `evaluation.py`.
+  - Fixed `pr_auc_score` dimension error in `modeling.py`.
+  - Improved `RandomForestClassifier` stability by setting `n_jobs=None`.
+
 ## Business Justification
 
 The Random Forest model was selected as the final candidate because it provides a superior balance between Precision and Recall. In fraud detection, missing a fraud case (False Negative) is costly, but so is blocking a legitimate user (False Positive). Our model focuses on maximizing the F1-Score and AUC-PR to ensure high reliability in a production environment.
