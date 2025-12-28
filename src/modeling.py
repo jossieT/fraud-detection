@@ -9,6 +9,8 @@ import joblib
 
 def pr_auc_score(y_true, y_probs):
     """Computes Area Under the Precision-Recall Curve."""
+    if y_probs.ndim > 1:
+        y_probs = y_probs[:, 1]
     precision, recall, _ = precision_recall_curve(y_true, y_probs)
     return auc(recall, precision)
 
@@ -33,7 +35,7 @@ def train_ensemble_model(X_train, y_train):
         n_estimators=100, 
         class_weight='balanced', 
         random_state=42,
-        n_jobs=-1
+        n_jobs=None
     )
     model.fit(X_train, y_train)
     return model

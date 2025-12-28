@@ -35,7 +35,7 @@ def evaluate_model(model, X_test, y_test, model_name="Model"):
     plt.title(f'Confusion Matrix - {model_name}')
     plt.xlabel('Predicted')
     plt.ylabel('Actual')
-    plt.show()
+    # plt.show()
     
     return {
         'f1': f1,
