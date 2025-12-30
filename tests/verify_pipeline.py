@@ -1,4 +1,3 @@
-
 import pandas as pd
 import numpy as np
 import os
@@ -8,8 +7,8 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
 from data_loader import load_data
-from preprocessing import clean_fraud_data, clean_ip_data
-from feature_engineering import feature_engineer_fraud_data, encode_categorical
+from preprocessing import clean_fraud_data, clean_ip_data, DataTransformer
+from feature_engineering import feature_engineer_fraud_data
 
 def create_dummy_data():
     """Creates dummy data for testing."""
@@ -17,16 +16,16 @@ def create_dummy_data():
     
     # Fraud Data
     fraud_data = {
-        'user_id': range(1, 11),
+        'user_id': [1, 1, 2, 3, 4, 5, 6, 7, 8, 9],
         'signup_time': pd.date_range(start='2024-01-01', periods=10, freq='D'),
         'purchase_time': pd.date_range(start='2024-01-02', periods=10, freq='D'),
         'purchase_value': np.random.randint(10, 100, 10),
-        'device_id': [f'dev_{i}' for i in range(10)],
+        'device_id': ['dev_1', 'dev_1', 'dev_2', 'dev_3', 'dev_4', 'dev_5', 'dev_6', 'dev_7', 'dev_8', 'dev_9'],
         'source': ['SEO', 'Ads'] * 5,
         'browser': ['Chrome', 'Firefox'] * 5,
         'sex': ['M', 'F'] * 5,
         'age': np.random.randint(18, 60, 10),
-        'ip_address': [1.2e9 + i for i in range(10)], # Float/Int style
+        'ip_address': [1.2e9 + i for i in range(10)],
         'class': [0, 1] * 5
     }
     pd.DataFrame(fraud_data).to_csv('../data/raw/Fraud_Data.csv', index=False)
@@ -38,37 +37,35 @@ def create_dummy_data():
         'country': ['Utopia', 'Atlantis']
     }
     pd.DataFrame(ip_data).to_csv('../data/raw/IpAddress_to_Country.csv', index=False)
-    
-    # Credit Card Data
-    cc_data = {
-        'Time': range(10),
-        'V1': np.random.randn(10),
-        'Class': [0, 1] * 5
-    }
-    pd.DataFrame(cc_data).to_csv('../data/raw/creditcard.csv', index=False)
 
 def test_pipeline():
-    print("Creating dummy data...")
+    print("Testing pipeline with Task 1 enhancements...")
     create_dummy_data()
     
-    print("Testing pipeline...")
     fraud_df = load_data('../data/raw/Fraud_Data.csv')
     ip_df = load_data('../data/raw/IpAddress_to_Country.csv')
     
-    assert fraud_df is not None
-    assert ip_df is not None
-    
+    # Clean
     fraud_df = clean_fraud_data(fraud_df)
     ip_df = clean_ip_data(ip_df)
     
+    # Feature Engineer
     fraud_df = feature_engineer_fraud_data(fraud_df, ip_df)
     
-    cols_to_check = ['time_since_signup', 'hour_of_day', 'day_of_week', 'country']
-    for col in cols_to_check:
-        assert col in fraud_df.columns, f"Missing {col}"
-        
+    print(f"Features added: {fraud_df.columns.tolist()}")
+    assert 'country' in fraud_df.columns
+    assert 'user_freq' in fraud_df.columns
+    assert 'device_freq' in fraud_df.columns
+    
+    # Transform
+    X = fraud_df.drop(columns=['class', 'user_id', 'signup_time', 'purchase_time', 'device_id'])
+    y = fraud_df['class']
+    
+    transformer = DataTransformer(use_smote=False) # Disable SMOTE for small dummy set
+    X_transformed = transformer.fit_transform(X)
+    
+    print(f"Transformed X shape: {X_transformed.shape}")
     print("Pipeline test successful!")
-    print(fraud_df[['user_id', 'country', 'time_since_signup']].head())
 
 if __name__ == "__main__":
     test_pipeline()
