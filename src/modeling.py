@@ -62,6 +62,19 @@ def stratified_cross_validation(model, X, y, k=5):
         'auc_pr_std': np.std(cv_results['test_auc_pr'])
     }
 
+def get_feature_importance(model, features):
+    """
+    Extracts and visualizes feature importance from the ensemble model.
+    """
+    if not hasattr(model, 'feature_importances_'):
+        print("Model does not have feature_importances_ attribute.")
+        return None
+        
+    importances = model.feature_importances_
+    feat_imp = pd.Series(importances, index=features).sort_values(ascending=False)
+    
+    return feat_imp
+
 def save_model(model, path):
     """Saves the trained model to the specified path."""
     joblib.dump(model, path)
