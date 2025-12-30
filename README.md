@@ -37,8 +37,23 @@ This project aims to build accurate and explainable fraud detection models for A
 - **Models**:
   - **Baseline**: Logistic Regression for interpretability.
   - **Ensemble**: Random Forest for capturing non-linear fraud patterns (Production Model).
+- **Explainability**: SHAP (SHapley Additive exPlanations) used for global Importance and local force plots.
 - **Metrics**: Prioritized **AUC-PR** (Area Under Precision-Recall Curve) and **F1-Score** over accuracy due to class imbalance.
 - **Cross-Validation**: 5-fold Stratified K-Fold to ensure model stability.
+
+## Explainability & Insights
+
+Based on SHAP analysis, the top drivers for fraud detection are:
+
+1. **Time Since Signup**: Purchases made immediately after account creation are exceptionally high risk.
+2. **Device Frequency**: A single device used across multiple accounts indicates bot or organized fraud activity.
+3. **Transaction Value & Country**: Specific high-ratio combinations are flagged effectively by the ensemble model.
+
+## Business Recommendations
+
+1. **Step-up Verification**: Implement mandatory Multi-Factor Authentication (MFA) for transactions occurring within 1 hour of account creation.
+2. **Device Throttling**: Flag and temporarily block devices that attempt transactions from more than 3 unique accounts in 24 hours.
+3. **Regional Friction**: Apply additional security gates for transactions originating from high-risk regions identified in the country-wise fraud analysis.
 
 ## Getting Started
 
